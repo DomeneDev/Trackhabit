@@ -45,7 +45,7 @@ class HabitLog:
     completado.
     """
 
-    def __init__(self, habito: str, fecha: str):
+    def __init__(self, habito: str, fecha: str) -> None:
         """
         Args:
             habito (str): El nombre del hábito al que pertenece el registro.
@@ -55,6 +55,7 @@ class HabitLog:
         self.fecha = fecha
 
 
+# Script de prueba de clase Habit
 if __name__ == "__main__":
     habito_1 = Habit("Estudiar una lección de programación", "Diario")
     habito_2 = Habit("Practiar ejercicios de programación", "Semanal")
