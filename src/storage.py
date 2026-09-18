@@ -23,7 +23,7 @@ import json
 from pathlib import Path
 
 # Importamos models.py para que se comprenda los datos a guardar.
-from models import Habit
+from models import Habit, HabitLog
 
 # funcion para convertir objeto Habit en un Dict manejable por JSON
 
@@ -43,6 +43,8 @@ def habit_to_dict(habit: Habit) -> dict:
         "frecuencia": habit.frecuencia
     }
 
+# Función pra convertir un Dict del archivo JSON a un Objeto Habit
+
 
 def dict_to_habit(dict_habit: dict) -> Habit:
     """
@@ -60,6 +62,7 @@ def dict_to_habit(dict_habit: dict) -> Habit:
     )
 
 
+# Función para guardar Habits
 def save_habits(habits: list[Habit], path: str) -> None:
     """
     Guardar la lista actual de hábitos en un archivo JSON
@@ -74,6 +77,7 @@ def save_habits(habits: list[Habit], path: str) -> None:
         json.dump(data_habits, f, indent=4)
 
 
+# Función para cargar Habits
 def load_habits(path: str) -> list[Habit]:
     """
     Cargar los hábitos guardados previamente desde el archivo JSON.
@@ -98,3 +102,75 @@ def load_habits(path: str) -> list[Habit]:
     except (FileNotFoundError, json.JSONDecodeError):
         data_habits = []
         return data_habits
+
+# Función para convertir los objetos HabitLog a dict serializable por JSON
+
+
+def log_to_dict(log: HabitLog) -> dict:
+    """
+    Convierte una instancia de HabitLog en un diccionario a JSON
+
+    Args:
+        log (HabitLog): Objeto de clase HabitLog
+
+    Returns:
+        dict: Diccionario serializable JSON
+    """
+    return {
+        "nombre": log.habito,
+        "fecha": log.fecha
+    }
+
+# Función para convetir los dict del archivo Joson a Objetos HabitLog
+
+
+def dict_to_log(dict_log: dict) -> HabitLog:
+    """
+    Reconstruye el objeto HabitLog desde un diccionario cargado del JSON
+
+    Args:
+        dict_log (dict): Diccionario de registro extraído de JSON
+
+    Returns:
+        HabitLog: Objeto HabitLog
+    """
+    return HabitLog(
+        habito=dict_log["nombre"],
+        fecha=dict_log["fecha"]
+    )
+
+
+# Función para guardar los logs de HabitLog
+def save_logs(logs: list[HabitLog], path: str) -> None:
+    """
+    Guardar lista actual de registros de cumplimiento en un archivo JSON
+
+    Args:
+        logs (list[HabitLog]): Lista de Objetos HabitLog a almacenar.
+        path (str): Ruta del archivo donde se guardará la información.
+    """
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    data_logs = [log_to_dict(l) for l in logs]
+    with open(path, 'w', encoding="utf-8") as f:
+        json.dump(data_logs, f, indent=4)
+
+
+# Función para cargar los logs de HabitLog
+def load_logs(path: str) -> list[HabitLog]:
+    """
+    Cargar los registros de cumplimiento guardados previamente desde JSON
+
+    Args:
+        path (str): Ruta del archivo JSON
+
+    Returns:
+        list: Lista de registos existentes en el archivo JSON
+    """
+    try:
+        with open(path, 'r', encoding="utf-8") as f:
+            data_log_json = json.load(f)
+            data_log = [dict_to_log(l) for l in data_log_json]
+            return data_log
+    except (FileNotFoundError, json.JSONDecodeError):
+        data_log = []
+        return data_log
