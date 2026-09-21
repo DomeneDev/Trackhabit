@@ -42,11 +42,12 @@ pip install pytest
 ```
 trackhabit/
 ├── README.md
-├── main.py            # menú de consola (pendiente — Fase 4)
-├── utils.py            # constantes de mensajes + validadores de entrada (pendiente — Fase 4)
-├── models.py          # clases Habit y HabitLog
-├── storage.py         # guardar y cargar hábitos y registros en JSON
-├── tracker.py         # HabitTracker: crear hábito, marcar cumplido, calcular racha
+├── src/
+│   └── main.py            # menú de consola (pendiente — Fase 4)
+│   └──utils.py            # constantes de mensajes + validadores de entrada (pendiente — Fase 4)
+│   └──models.py          # clases Habit y HabitLog
+│   └──storage.py         # guardar y cargar hábitos y registros en JSON
+│   └──tracker.py         # HabitTracker: crear hábito, marcar cumplido, calcular racha
 ├── tests/
 │   └── test_tracker.py    # pendiente — Fase 5
 └── data/
