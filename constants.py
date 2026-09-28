@@ -1,6 +1,6 @@
 """
 MODULO: constants.py
-PROYECTO: TrackHabit (Fase 5 - Archivo de constantes)
+PROYECTO: TrackHabit (Fase 4.1 - Archivo de constantes)
 
 DESCRIPCIÓN GENERAL:
 Almacenan los mensajes que se muestran al usuario durante la ejecución del
