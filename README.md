@@ -11,7 +11,7 @@
 
 TrackHabit guarda tus hábitos diarios o semanales en un archivo JSON, permite marcarlos como completados y calcula cuántos días seguidos llevas cumpliendo (tu racha). Sin bases de datos ni frameworks web — Python puro, pensado para consolidar POO paso a paso.
 
-**Estado actual:** Fases 1-4 completadas (modelos, persistencia, lógica de rachas e interfaz de consola). Aplicación usable de principio a fin desde la terminal. Pendiente: tests automatizados (Fase 5).
+**Estado actual:** Fases 1-5 completadas (modelos, persistencia, lógica de rachas, consola y tests con pytest). Fase 6 (API Flask) es un reto opcional, no implementada.
 
 ---
 
@@ -29,7 +29,7 @@ git clone <tu-repo>
 cd trackhabit
 python -m venv .venv
 .venv\Scripts\activate
-pip install pytest
+pip install -r requirements.txt
 ```
 
 > 💡 CMD en lugar de PowerShell: `.venv\Scripts\activate.bat`
@@ -39,21 +39,24 @@ pip install pytest
 
 ### 📂 Estructura del proyecto
 
-````
+```
 trackhabit/
 ├── README.md
-├── main.py            # punto de entrada: bucle del menú de consola
-├── constants.py       # constantes de mensajes y rutas de archivo
-├── utils.py           # menú, validador de entrada, lectura de datos de consola
-├── models.py          # clases Habit y HabitLog
-├── storage.py         # guardar y cargar hábitos y registros en JSON
-├── tracker.py         # HabitTracker: crear hábito, marcar cumplido, calcular racha
+├── requirements.txt
+├── pytest.ini
+├── src/
+│   ├── main.py            # punto de entrada: bucle del menú de consola
+│   ├── constants.py       # constantes de mensajes y rutas de archivo
+│   ├── utils.py           # menú, validador de entrada, lectura de datos de consola
+│   ├── models.py          # clases Habit y HabitLog
+│   ├── storage.py         # guardar y cargar hábitos y registros en JSON
+│   └── tracker.py         # HabitTracker: crear hábito, marcar cumplido, calcular racha
 ├── tests/
-│   └── test_tracker.py    # pendiente — Fase 5
+│   └── test_tracker.py    # tests pytest (Fase 5)
 └── data/
-    ├── habits.json    # se crea solo al ejecutar el programa
-    └── habits_log.json # historial de cumplimiento, se crea al usar mark_done
-
+    ├── habits.json        # se crea al ejecutar el programa
+    └── habits_log.json    # historial de cumplimiento
+```
 ---
 
 ### 🧩 Módulos
@@ -62,18 +65,24 @@ trackhabit/
 - **`storage.py`** ✅ — `save_habits`/`load_habits` y `save_logs`/`load_logs`, usando `json` y `pathlib.Path` para que funcione igual en Windows. Ambas funciones de carga devuelven lista vacía si el archivo no existe.
 - **`tracker.py`** ✅ — Clase `HabitTracker` con `add_habit`, `mark_done`, `get_streak`. Carga y guarda automáticamente en disco.
 - **`constants.py`** ✅ - Todos los textos que se muestran al usuario (bienvenida, menú, confirmaciones, errrores) y rutas de los archivos de datos, centralizados en un solo sitio
-- **`utils.py`** ⏳ — Funciones de apoyo a la consola: menu() (muestra las opciones), validar_opcion() (valida que la entrada sea un entero positivo, repreguntando si no lo es), read_new_habit() y read_habit() (lectura de datos por teclado)
-- **`main.py`** ⏳ — Bucle principal con match/case: crea un único HabitTracker al arrancar y lo reutiliza en cada opción del menú (crear hábito, marcar cumplido, ver racha, salir), sin releer el disco en cada acción.
-- **`tests/test_tracker.py`** ⏳ — Tests con `pytest`: racha nueva = 0, tres días seguidos = racha 3.
+- **`utils.py`** ✅ — Funciones de apoyo a la consola: `menu()` (muestra las opciones), `validar_opcion()` (valida que la entrada sea un entero positivo, repreguntando si no lo es), `read_new_habit()` y `read_habit()` (lectura de datos por teclado)
+- **`main.py`** ✅ — Bucle principal con match/case: crea un único HabitTracker al arrancar y lo reutiliza en cada opción del menú (crear hábito, marcar cumplido, ver racha, salir), sin releer el disco en cada acción.
+- **`tests/test_tracker.py`** ✅ — Tests con `pytest`: racha nueva = 0, tres días seguidos = racha 3, día saltado, fechas duplicadas, hábito inexistente y `load_habits` sin archivo.
 
 ---
 
 ### ▶️ Cómo ejecutar
 
 ```powershell
+cd src
 python main.py
-pytest
-````
+```
+
+Los hábitos se guardan en `src/data/` (rutas relativas desde el directorio de trabajo).
+
+```powershell
+.venv\Scripts\python.exe -m pytest -q
+```
 
 ---
 
@@ -83,4 +92,5 @@ pytest
 - [x] Fase 2 — Guardar y cargar datos (JSON)
 - [x] Fase 3 — Lógica de rachas
 - [x] Fase 4 — Interfaz de consola
-- [ ] Fase 5 — Tests con pytest
+- [x] Fase 5 — Tests con pytest
+- [ ] Fase 6 — API Flask (opcional)
