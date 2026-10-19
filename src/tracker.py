@@ -55,10 +55,16 @@ class HabitTracker:
         """
         if fecha is None:
             fecha = str(date.today())
-        for habit in self.habits:
-            if habit.nombre == nombre:
-                habito_completo = HabitLog(nombre, fecha)
-                self.habits_historial.append(habito_completo)
+        existe = any(habit.nombre == nombre for habit in self.habits)
+        if not existe:
+            return
+        ya_marcado = any(
+            log.habito == nombre and log.fecha == fecha
+            for log in self.habits_historial
+        )
+        if ya_marcado:
+            return
+        self.habits_historial.append(HabitLog(nombre, fecha))
         save_logs(self.habits_historial, self.logs_path)
 
     def get_streak(self, nombre: str) -> int:
@@ -82,18 +88,17 @@ class HabitTracker:
             log for log in self.habits_historial if log.habito == nombre]
         if not registros:
             return 0
-        else:
-            fechas = [
-                date.fromisoformat(log.fecha) for log in registros
-            ]
-            fechas_ordenadas = sorted(fechas, reverse=True)
-            racha = 1
-            for fecha_actual, fecha_siguiente in zip(
-                fechas_ordenadas, fechas_ordenadas[1:]
-            ):
-                diferencia = (fecha_actual - fecha_siguiente).days
-                if diferencia == 1:
-                    racha += 1
-                else:
-                    break
+        fechas_unicas = {
+            date.fromisoformat(log.fecha) for log in registros
+        }
+        fechas_ordenadas = sorted(fechas_unicas, reverse=True)
+        racha = 1
+        for fecha_actual, fecha_siguiente in zip(
+            fechas_ordenadas, fechas_ordenadas[1:]
+        ):
+            diferencia = (fecha_actual - fecha_siguiente).days
+            if diferencia == 1:
+                racha += 1
+            else:
+                break
         return racha
