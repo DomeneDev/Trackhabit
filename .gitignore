@@ -1,0 +1,20 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Cache de pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Datos generados por la app (son tus hábitos reales, no deben subirse al repo)
+data/*.json
+
+# Configuración de editor
+.vscode/
+.idea/
+EOF
